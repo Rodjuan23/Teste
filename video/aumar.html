@@ -10,10 +10,10 @@
 @font-face{font-family:Manrope;font-weight:400;src:url(fonts/manrope-latin-400-normal.woff2)}
 @font-face{font-family:Manrope;font-weight:600;src:url(fonts/manrope-latin-600-normal.woff2)}
 :root{
-  --vinho:#732C1D;   /* 60% fundos */
-  --caramelo:#A67C63;/* 20% formas e linhas */
-  --areia:#D9BD9C;   /* 10% apoio e detalhes */
-  --creme:#F2E6C2;   /* 10% títulos e destaques */
+  --vinho:#732C1D;   /* 60% fundos, transições, cenas de impacto */
+  --caramelo:#A67C63;/* 20% formas geométricas, linhas de conexão */
+  --areia:#D9BD9C;   /* 10% apoio, ícones, detalhes */
+  --creme:#F2E6C2;   /* 10% títulos, palavras-chave, destaques */
 }
 html,body{margin:0;background:#000}
 #stage{position:relative;width:1080px;height:1920px;overflow:hidden;
@@ -22,58 +22,165 @@ html,body{margin:0;background:#000}
   background:radial-gradient(circle, rgba(217,189,156,.10) 0%, rgba(217,189,156,0) 60%)}
 svg{position:absolute;inset:0}
 #grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay}
-.scene{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;color:var(--creme)}
-.w{display:inline-block;will-change:transform,opacity,filter}
-.serif{font-family:Cormorant;font-weight:500;line-height:1.02;letter-spacing:-.01em}
-.it{font-family:Cormorant;font-style:italic;font-weight:600;letter-spacing:-.015em}
-.eyebrow{font-family:Manrope;font-weight:600;font-size:28px;letter-spacing:.42em;color:var(--areia);
-  display:flex;align-items:center;gap:22px;margin-bottom:56px}
+#fade{position:absolute;inset:0;background:var(--vinho);opacity:0}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;color:var(--creme);visibility:hidden}
+.w{display:inline-block;will-change:transform,opacity,filter;opacity:0}
+.serif{font-family:Cormorant;font-weight:500;line-height:1.04;letter-spacing:-.01em}
+.it{font-family:Cormorant;font-style:italic;font-weight:600;letter-spacing:-.015em;line-height:1.08}
+.sans{font-family:Manrope;font-weight:600;letter-spacing:.42em;color:var(--areia)}
+.areia{color:var(--areia)}
+.eyebrow{font-size:28px;display:flex;align-items:center;gap:22px;margin-bottom:56px}
 .eyebrow i{display:block;height:2px;background:var(--caramelo);width:0}
 .l1{font-size:112px}.l2{font-size:176px;line-height:1.05}
 .m{font-size:96px;margin:6px 0}.big{font-size:164px;line-height:1.1;position:relative;padding:4px 40px 20px}
+.s72{font-size:72px;margin:4px 0}.s80{font-size:80px}.s120{font-size:120px}.s140{font-size:140px}.s124{font-size:124px}.s150{font-size:150px}
 .corner{position:absolute;width:46px;height:46px;border-color:var(--areia);border-style:solid;border-width:0;opacity:0}
 .c1{left:0;top:0;border-left-width:3px;border-top-width:3px}
 .c2{right:0;top:0;border-right-width:3px;border-top-width:3px}
 .c3{left:0;bottom:0;border-left-width:3px;border-bottom-width:3px}
 .c4{right:0;bottom:0;border-right-width:3px;border-bottom-width:3px}
 #underline{height:3px;background:var(--caramelo);width:0;margin-top:26px}
+.rule{height:2px;background:var(--caramelo);width:0;margin:54px 0 46px}
+.dots{position:absolute;bottom:380px;left:0;right:0;display:flex;justify-content:center;gap:26px}
+.dots b{width:12px;height:12px;border-radius:50%;border:2px solid var(--areia);opacity:0}
+.dots b.on{background:var(--creme);border-color:var(--creme)}
+.lab{position:absolute;font-family:Cormorant;font-style:italic;font-weight:600;font-size:80px;color:var(--creme);
+  transform:translate(-50%,-50%);white-space:nowrap}
+.mark{font-family:Cormorant;font-weight:500;font-size:220px;line-height:1;letter-spacing:-.01em}
+.tag{font-size:30px;margin-top:40px}
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="glow"></div>
   <svg id="net" viewBox="0 0 1080 1920"></svg>
-  <svg id="rings" viewBox="0 0 1080 1920"></svg>
+  <svg id="fx" viewBox="0 0 1080 1920"></svg>
+  <svg id="dia" viewBox="0 0 1080 1920"></svg>
+  <svg id="path" viewBox="0 0 1080 1920"></svg>
 
-  <!-- Cena A: "Tudo está conectado." -->
+  <!-- A · Tudo está conectado. -->
   <div class="scene" id="A">
     <div class="serif l1"><span class="w" data-t="0.66">Tudo</span> <span class="w" data-t="0.92">está</span></div>
     <div class="it l2"><span class="w" data-t="1.20">conectado.</span></div>
     <div id="underline"></div>
   </div>
 
-  <!-- Cena B: "Uma marca não é feita apenas do que comunica." -->
+  <!-- B · Uma marca não é feita apenas do que comunica. -->
   <div class="scene" id="B">
-    <div class="eyebrow" id="eb"><i></i><span>MARCA</span><i></i></div>
+    <div class="eyebrow sans" id="eb"><i></i><span>MARCA</span><i></i></div>
     <div class="serif m"><span class="w" data-t="2.67">Uma</span> <span class="w" data-t="2.95">marca</span></div>
     <div class="serif m"><span class="w" data-t="3.15">não</span> <span class="w" data-t="3.30">é</span> <span class="w" data-t="3.42">feita</span></div>
     <div class="serif m"><span class="w" data-t="3.78">apenas</span> <span class="w" data-t="4.06">do</span> <span class="w" data-t="4.30">que</span></div>
-    <div class="it big" id="frame"><span class="w" data-t="4.50">comunica.</span>
+    <div class="it big frame" data-f="4.75"><span class="w" data-t="4.50">comunica.</span>
       <b class="corner c1"></b><b class="corner c2"></b><b class="corner c3"></b><b class="corner c4"></b></div>
   </div>
 
-  <!-- Cena C: "É feita do que as pessoas sentem," -->
+  <!-- C · É feita do que as pessoas sentem, -->
   <div class="scene" id="C">
     <div class="serif m"><span class="w" data-t="5.63">É</span> <span class="w" data-t="5.80">feita</span> <span class="w" data-t="6.05">do</span> <span class="w" data-t="6.13">que</span></div>
     <div class="serif m"><span class="w" data-t="6.25">as</span> <span class="w" data-t="6.38">pessoas</span></div>
-    <div class="it l2" id="sentem"><span class="w" data-t="6.74">sentem,</span></div>
+    <div class="it l2"><span class="w" data-t="6.74">sentem,</span></div>
+  </div>
+
+  <!-- D · das experiências que vivem e das conexões que permanecem. -->
+  <div class="scene" id="D">
+    <div class="serif m"><span class="w" data-t="7.85">das</span> <span class="w" data-t="8.00">experiências</span></div>
+    <div class="serif m"><span class="w" data-t="8.58">que</span> <span class="w" data-t="8.76">vivem</span></div>
+    <div class="serif m"><span class="w" data-t="9.28">e</span> <span class="w" data-t="9.42">das</span> <span class="w" data-t="9.58">conexões</span> <span class="w" data-t="10.12">que</span></div>
+    <div class="it s150"><span class="w" data-t="10.30">permanecem.</span></div>
+  </div>
+
+  <!-- E · Porque não basta ser visto. É preciso ser compreendido. -->
+  <div class="scene pair" id="E" data-b="13.36">
+    <div class="top"><div class="serif s80 areia"><span class="w" data-t="11.56">Porque</span> <span class="w" data-t="11.75">não</span> <span class="w" data-t="11.92">basta</span></div>
+      <div class="it s120 areia"><span class="w" data-t="12.12">ser</span> <span class="w" data-t="12.34">visto.</span></div></div>
+    <div class="rule"></div>
+    <div class="serif s80"><span class="w" data-t="13.36">É</span> <span class="w" data-t="13.50">preciso</span> <span class="w" data-t="13.82">ser</span></div>
+    <div class="it s140"><span class="w" data-t="14.08">compreendido.</span></div>
+    <div class="dots"><b class="on"></b><b></b><b></b></div>
+  </div>
+
+  <!-- F · Não basta atrair. É preciso criar relacionamentos. -->
+  <div class="scene pair" id="F" data-b="16.72">
+    <div class="top"><div class="serif s80 areia"><span class="w" data-t="15.32">Não</span> <span class="w" data-t="15.45">basta</span></div>
+      <div class="it s120 areia"><span class="w" data-t="15.65">atrair.</span></div></div>
+    <div class="rule"></div>
+    <div class="serif s80"><span class="w" data-t="16.72">É</span> <span class="w" data-t="16.85">preciso</span> <span class="w" data-t="17.12">criar</span></div>
+    <div class="it s124"><span class="w" data-t="17.40">relacionamentos.</span></div>
+    <div class="dots"><b class="on"></b><b class="on"></b><b></b></div>
+  </div>
+
+  <!-- G · E não basta estar presente. É preciso fazer sentido. -->
+  <div class="scene pair" id="G" data-b="21.17">
+    <div class="top"><div class="serif s80 areia"><span class="w" data-t="19.21">E</span> <span class="w" data-t="19.32">não</span> <span class="w" data-t="19.42">basta</span></div>
+      <div class="it s120 areia"><span class="w" data-t="19.65">estar</span> <span class="w" data-t="19.96">presente.</span></div></div>
+    <div class="rule"></div>
+    <div class="serif s80"><span class="w" data-t="21.17">É</span> <span class="w" data-t="21.30">preciso</span></div>
+    <div class="it s140"><span class="w" data-t="21.55">fazer</span> <span class="w" data-t="21.80">sentido.</span></div>
+    <div class="dots"><b class="on"></b><b class="on"></b><b class="on"></b></div>
+  </div>
+
+  <!-- H · Na Aumar, acreditamos que o marketing acontece quando tudo trabalha em conexão. -->
+  <div class="scene" id="H">
+    <div class="serif m"><span class="w" data-t="22.87">Na</span> <span class="w it" data-t="23.05">Aumar,</span></div>
+    <div style="height:30px"></div>
+    <div class="serif s72"><span class="w" data-t="23.77">acreditamos</span> <span class="w" data-t="24.38">que</span> <span class="w" data-t="24.54">o</span> <span class="w" data-t="24.60">marketing</span></div>
+    <div class="serif s72"><span class="w" data-t="24.96">acontece</span> <span class="w" data-t="25.36">quando</span> <span class="w" data-t="25.96">tudo</span></div>
+    <div class="serif s72"><span class="w" data-t="26.32">trabalha</span> <span class="w" data-t="26.98">em</span></div>
+    <div class="it l2"><span class="w" data-t="27.06">conexão.</span></div>
+  </div>
+
+  <!-- I · Marca. Pessoas. Experiência. Digital. (rótulos do losango) -->
+  <div class="scene" id="I">
+    <div class="lab" style="left:540px;top:560px"><span class="w" data-t="28.16">Marca.</span></div>
+    <div class="lab" style="left:860px;top:1050px"><span class="w" data-t="28.99">Pessoas.</span></div>
+    <div class="lab" style="left:540px;top:1370px"><span class="w" data-t="29.88">Experiência.</span></div>
+    <div class="lab" style="left:220px;top:1050px"><span class="w" data-t="30.66">Digital.</span></div>
+  </div>
+
+  <!-- J · Quatro dimensões. Uma visão integrada. -->
+  <div class="scene" id="J">
+    <div class="sans" style="font-size:30px;margin-bottom:34px"><span class="w" data-t="31.95">QUATRO</span> <span class="w" data-t="32.30">DIMENSÕES</span></div>
+    <div class="serif m"><span class="w" data-t="33.47">Uma</span> <span class="w" data-t="33.60">visão</span></div>
+    <div class="it s140"><span class="w" data-t="33.85">integrada.</span></div>
+  </div>
+
+  <!-- K · Para transformar cada ponto de contato em uma oportunidade de construir valor. -->
+  <div class="scene" id="K" style="justify-content:flex-start;padding-top:560px">
+    <div class="serif s80"><span class="w" data-t="35.04">Para</span> <span class="w" data-t="35.15">transformar</span></div>
+    <div class="serif s80"><span class="w" data-t="35.88">cada</span> <span class="w" data-t="36.06">ponto</span> <span class="w" data-t="36.42">de</span> <span class="w" data-t="36.72">contato</span></div>
+    <div class="serif s80"><span class="w" data-t="37.69">em</span> <span class="w" data-t="37.80">uma</span> <span class="w" data-t="37.95">oportunidade</span></div>
+    <div class="serif s80"><span class="w" data-t="38.64">de</span> <span class="w" data-t="38.84">construir</span></div>
+    <div class="it l2"><span class="w" data-t="39.16">valor.</span></div>
+  </div>
+
+  <!-- L · Aumar. Marketing holístico. -->
+  <div class="scene" id="L">
+    <div class="mark"><span class="w" data-t="40.11">Aumar</span></div>
+    <div class="sans tag"><span class="w" data-t="41.10">MARKETING</span> <span class="w" data-t="41.50">HOLÍSTICO</span></div>
+  </div>
+
+  <!-- M · Sua marca é muito mais do que aquilo que aparece. -->
+  <div class="scene" id="M">
+    <div class="serif s80"><span class="w" data-t="42.76">Sua</span> <span class="w" data-t="42.96">marca</span> <span class="w" data-t="43.24">é</span> <span class="w" data-t="43.42">muito</span> <span class="w" data-t="43.64">mais</span></div>
+    <div class="serif s80"><span class="w" data-t="43.94">do</span> <span class="w" data-t="44.06">que</span> <span class="w" data-t="44.20">aquilo</span> <span class="w" data-t="44.48">que</span></div>
+    <div class="it big frame" data-f="44.95" data-x="45.45"><span class="w" data-t="44.68">aparece.</span>
+      <b class="corner c1"></b><b class="corner c2"></b><b class="corner c3"></b><b class="corner c4"></b></div>
+  </div>
+
+  <!-- N · assinatura final -->
+  <div class="scene" id="N">
+    <div class="mark" style="font-size:170px"><span class="w" data-t="46.10">Aumar</span></div>
+    <div class="sans tag" style="font-size:26px"><span class="w" data-t="46.45">MARKETING HOLÍSTICO</span></div>
   </div>
 
   <canvas id="grain" width="540" height="960"></canvas>
+  <div id="fade"></div>
 </div>
 
 <script>
+const DURATION=48;
 // ---------- easing (Premium: 0.4,0,0.2,1) ----------
 function bez(x1,y1,x2,y2){
   const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
@@ -85,85 +192,143 @@ function bez(x1,y1,x2,y2){
 const EASE=bez(.4,0,.2,1), OUT=bez(.05,.7,.1,1), IN=bez(.3,0,1,1), SINE=p=>.5-.5*Math.cos(Math.PI*p);
 const clamp=v=>Math.min(1,Math.max(0,v));
 const prog=(t,s,d)=>clamp((t-s)/d);
+// interpolação suave entre keyframes [[t,v],...]
+const keys=(k,t)=>{ if(t<=k[0][0])return k[0][1];
+  for(let i=1;i<k.length;i++) if(t<=k[i][0]){const [a,va]=k[i-1],[b,vb]=k[i]; return va+(vb-va)*EASE((t-a)/(b-a));}
+  return k[k.length-1][1]; };
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+function el(parent,tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e;}
+
+// ---------- cenas: [entrada, saída] ----------
+const SCENES={A:[0,2.38],B:[2.55,5.38],C:[5.55,7.6],D:[7.8,11.08],E:[11.5,14.88],F:[15.27,18.8],G:[19.15,22.45],
+  H:[22.8,27.7],I:[28.1,31.55],J:[31.9,34.55],K:[35.0,39.66],L:[40.05,42.28],M:[42.7,45.9],N:[46.0,99]};
 
 // ---------- rede de conexões (caramelo + nós areia) ----------
-const NS='http://www.w3.org/2000/svg';
-const net=document.getElementById('net'), rings=document.getElementById('rings');
+const net=$('net'), fx=$('fx');
 const CX=540, CY=960;
 const nodes=[[180,520],[470,360],[860,470],[960,860],[900,1330],[620,1560],[250,1470],[110,1010],[540,250],[1000,1110],[330,1700],[80,760]];
 const edges=[[0,1],[1,8],[8,2],[2,3],[3,9],[9,4],[4,5],[5,10],[10,6],[6,7],[7,11],[11,0],[1,2],[6,5],[0,7],[3,4]];
-const spokes=nodes.map((_,i)=>i);
-const G=document.createElementNS(NS,'g'); net.appendChild(G);
-function line(a,b,w,op){const l=document.createElementNS(NS,'line');
-  l.setAttribute('x1',a[0]);l.setAttribute('y1',a[1]);l.setAttribute('x2',b[0]);l.setAttribute('y2',b[1]);
-  l.setAttribute('stroke','#A67C63');l.setAttribute('stroke-width',w);l.setAttribute('stroke-linecap','round');
-  const len=Math.hypot(b[0]-a[0],b[1]-a[1]);l.dataset.len=len;l.dataset.op=op;
-  l.setAttribute('stroke-dasharray',len);l.setAttribute('stroke-dashoffset',len);G.appendChild(l);return l;}
-const edgeEls=edges.map(([a,b])=>line(nodes[a],nodes[b],2,.75));
-const spokeEls=spokes.map(i=>line(nodes[i],[CX,CY],1.4,.38));
-const nodeEls=nodes.map((n,i)=>{const c=document.createElementNS(NS,'circle');
-  c.setAttribute('cx',n[0]);c.setAttribute('cy',n[1]);c.setAttribute('fill','#D9BD9C');G.appendChild(c);return c;});
+const G=el(net,'g',{});
+function line(parent,a,b,w,op){const len=Math.hypot(b[0]-a[0],b[1]-a[1]);
+  const l=el(parent,'line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'#A67C63','stroke-width':w,'stroke-linecap':'round','stroke-dasharray':len,'stroke-dashoffset':len});
+  l.dataset.len=len;l.dataset.op=op;return l;}
+const edgeEls=edges.map(([a,b])=>line(G,nodes[a],nodes[b],2,.75));
+const spokeEls=nodes.map(n=>line(G,n,[CX,CY],1.4,.38));
+const nodeEls=nodes.map(n=>el(G,'circle',{cx:n[0],cy:n[1],fill:'#D9BD9C'}));
+// intensidade da rede ao longo do vídeo (acende nos momentos de "conexão")
+const NET_I=[[0,1],[2.35,1],[3.05,.38],[9.9,.38],[10.5,.85],[11.0,.85],[11.5,.25],[22.6,.25],[23.1,.45],[26.9,.45],[27.3,1],[27.75,1],[28.15,.1],[34.5,.1],[35,.3],[39.7,.3],[40.15,.9],[42.25,.9],[42.7,.35],[45.7,.35],[46.1,.8],[48,.8]];
+const NET_S=[[0,1],[6.6,1],[7.8,.82],[9.9,.82],[10.8,1],[39.7,1],[40.3,.92],[42.3,.92],[42.8,1]];
+
+// ---------- losango → círculo (Marca · Pessoas · Experiência · Digital) ----------
+const dia=$('dia'); const DG=el(dia,'g',{});
+const DPT=[[0,-1],[1,0],[0,1],[-1,0]];          // topo, direita, base, esquerda
+const DT=[28.16,28.99,29.88,30.66];              // tempo de cada palavra
+const dLines=[0,1,2,3].map(()=>el(DG,'line',{stroke:'#A67C63','stroke-width':2.4,'stroke-linecap':'round'}));
+const dSpokes=[0,1,2,3].map(()=>el(DG,'line',{stroke:'#A67C63','stroke-width':1.2,'stroke-linecap':'round'}));
+const dHub=el(DG,'circle',{cx:CX,cy:CY,r:0,fill:'#F2E6C2'});
+const dRing=el(DG,'circle',{cx:CX,cy:CY,fill:'none',stroke:'#A67C63','stroke-width':2.4,transform:`rotate(-90 ${CX} ${CY})`});
+const dNodes=[0,1,2,3].map(()=>el(DG,'circle',{fill:'#D9BD9C'}));
+
+// ---------- pontos de contato → linha de valor ----------
+const pth=$('path'); const PP=[[170,1640],[310,1590],[450,1600],[590,1520],[730,1470],[880,1360]];
+const PDT=[36.06,36.15,36.24,36.42,36.51,36.72];
+const plen=PP.slice(1).reduce((s,p,i)=>s+Math.hypot(p[0]-PP[i][0],p[1]-PP[i][1]),0);
+const pLine=el(pth,'polyline',{points:PP.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#A67C63','stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round','stroke-dasharray':plen,'stroke-dashoffset':plen});
+const pDots=PP.map(p=>el(pth,'circle',{cx:p[0],cy:p[1],r:0,fill:'#D9BD9C'}));
+const pAccent=el(pth,'circle',{cx:PP[5][0],cy:PP[5][1],r:0,fill:'none',stroke:'#F2E6C2','stroke-width':2});
 
 // ---------- grão (camada ambiente) ----------
-const gc=document.getElementById('grain').getContext('2d'); const img=gc.createImageData(540,960);
+const gc=$('grain').getContext('2d'); const img=gc.createImageData(540,960);
 function grain(f){ let s=(f*9301+49297)%233280||1;
   for(let i=0;i<img.data.length;i+=4){ s=(s*16807)%2147483647; const v=s%255;
     img.data[i]=img.data[i+1]=img.data[i+2]=v; img.data[i+3]=255; } gc.putImageData(img,0,0); }
 
-// ---------- palavras ----------
-const words=[...document.querySelectorAll('.w')].map(el=>({el,t:+el.dataset.t}));
+// ---------- palavras e cenas ----------
+const words=[...document.querySelectorAll('.w')].map(e=>({el:e,t:+e.dataset.t}));
 function wordIn(w,t){ const p=prog(t,w.t-0.06,0.6), e=OUT(p);
-  w.el.style.opacity=e; w.el.style.transform=`translateY(${(1-e)*34}px)`; w.el.style.filter=`blur(${(1-e)*10}px)`; }
-function sceneOut(id,t,start,dur=0.38){ const p=IN(prog(t,start,dur)); const el=document.getElementById(id);
-  el.style.opacity=1-p; el.style.transform=`translateY(${-46*p}px)`; el.style.filter=`blur(${6*p}px)`; }
+  w.el.style.opacity=e; w.el.style.transform=`translateY(${(1-e)*34}px)`; w.el.style.filter=e>=1?'none':`blur(${(1-e)*10}px)`; }
+function scene(id,t){ const [a,b]=SCENES[id], s=$(id);
+  s.style.visibility = (t<a-0.15 || t>b+0.45) ? 'hidden':'visible';
+  const p=IN(prog(t,b,0.38)); s.style.opacity=1-p; s.style.transform=`translateY(${-46*p}px)`; s.style.filter=p>0?`blur(${6*p}px)`:'none'; }
+const RIPPLES=[[6.78,1088],[7.12,1088],[7.46,1088],[40.15,900],[40.5,900],[46.15,900]];
 
-// ---------- quadro no tempo t (segundos) ----------
 window.render=function(t){
   // ambiente: luz suave à deriva + grão
-  const g=document.getElementById('glow');
-  g.style.transform=`translate(${-160+Math.sin(t*.35)*120}px, ${260+Math.cos(t*.28)*160}px)`;
+  $('glow').style.transform=`translate(${-160+Math.sin(t*.35)*120}px, ${260+Math.cos(t*.28)*160}px)`;
   grain(Math.round(t*30));
 
-  // rede: nós aparecem, arestas se ligam em "conectado", depois recua para ambiente
-  const dim = 1 - .62*EASE(prog(t,2.35,.7));
-  const breathe = 1 + .012*Math.sin(t*1.1);
-  const toward = .18*EASE(prog(t,6.6,1.2));               // em "sentem" a rede se aproxima do centro
-  G.setAttribute('transform',`translate(${CX} ${CY}) rotate(${t*.9}) scale(${breathe*(1-toward)}) translate(${-CX} ${-CY})`);
+  // rede
+  const I=keys(NET_I,t), S=keys(NET_S,t)*(1+.012*Math.sin(t*1.1));
+  G.setAttribute('transform',`translate(${CX} ${CY}) rotate(${t*.9}) scale(${S}) translate(${-CX} ${-CY})`);
   nodeEls.forEach((c,i)=>{ const e=OUT(prog(t,.45+i*.035,.55));
-    c.setAttribute('r',(i%3?5:8)*e*(1+.15*Math.sin(t*2+i))); c.setAttribute('opacity',e*.95*Math.max(dim,.5)); });
+    c.setAttribute('r',(i%3?5:8)*e*(1+.15*Math.sin(t*2+i))); c.setAttribute('opacity',e*.95*Math.max(I,.35)); });
   edgeEls.forEach((l,i)=>{ const e=EASE(prog(t,1.18+i*.03,.9));
-    l.setAttribute('stroke-dashoffset',l.dataset.len*(1-e)); l.setAttribute('opacity',l.dataset.op*dim); });
+    l.setAttribute('stroke-dashoffset',l.dataset.len*(1-e)); l.setAttribute('opacity',l.dataset.op*I); });
   spokeEls.forEach((l,i)=>{ const e=EASE(prog(t,1.45+i*.025,.8));
-    l.setAttribute('stroke-dashoffset',l.dataset.len*(1-e)); l.setAttribute('opacity',l.dataset.op*dim*(1-.6*EASE(prog(t,2.3,.5)))); });
+    l.setAttribute('stroke-dashoffset',l.dataset.len*(1-e)); l.setAttribute('opacity',l.dataset.op*I*(1-.6*EASE(prog(t,2.3,.5)))); });
 
-  // palavras
+  // palavras + cenas
   words.forEach(w=>wordIn(w,t));
+  Object.keys(SCENES).forEach(id=>scene(id,t));
 
-  // Cena A
-  document.getElementById('underline').style.width=(560*EASE(prog(t,1.75,.65)))+'px';
-  sceneOut('A',t,2.38);
+  // A: sublinhado
+  $('underline').style.width=(560*EASE(prog(t,1.75,.65)))+'px';
+  // B: rótulo
+  const eb=$('eb'); eb.style.opacity=OUT(prog(t,2.55,.6));
+  eb.querySelectorAll('i').forEach(i=>i.style.width=(70*EASE(prog(t,2.6,.6)))+'px');
+  // molduras ("comunica." e "aparece."); a de "aparece." se expande além da tela
+  document.querySelectorAll('.frame').forEach(f=>{ const pf=OUT(prog(t,+f.dataset.f,.6));
+    const px=f.dataset.x?EASE(prog(t,+f.dataset.x,.9)):0;
+    f.querySelectorAll('.corner').forEach((c,i)=>{ const sx=i%2?-1:1, sy=i<2?1:-1;
+      c.style.opacity=pf*(1-px*.6);
+      c.style.transform=`translate(${-sx*(26*(1-pf)+260*px)}px, ${-sy*(26*(1-pf)+560*px)}px)`; }); });
 
-  // Cena B: rótulo + moldura em "comunica."
-  const eb=document.getElementById('eb'); const pe=OUT(prog(t,2.55,.6));
-  eb.style.opacity=pe; eb.querySelectorAll('i').forEach(i=>i.style.width=(70*EASE(prog(t,2.6,.6)))+'px');
-  const pf=OUT(prog(t,4.75,.6));
-  document.querySelectorAll('#frame .corner').forEach((c,i)=>{ const sx=i%2?-1:1, sy=i<2?1:-1;
-    c.style.opacity=pf; c.style.transform=`translate(${-sx*26*(1-pf)}px, ${-sy*26*(1-pf)}px)`; });
-  sceneOut('B',t,5.38);
-  document.getElementById('B').style.visibility = t<2.4||t>5.9 ? 'hidden':'visible';
+  // pares "não basta / é preciso": divisória, metade de cima recua, marcador 1·2·3
+  document.querySelectorAll('.pair').forEach(p=>{ const b=+p.dataset.b, a=SCENES[p.id][0];
+    p.querySelector('.rule').style.width=(380*EASE(prog(t,b-.35,.6)))+'px';
+    p.querySelector('.top').style.opacity=1-.55*EASE(prog(t,b,.6));
+    p.querySelectorAll('.dots b').forEach((d,i)=>d.style.opacity=OUT(prog(t,a+.1+i*.06,.5))); });
 
-  // Cena C: ondas a partir de "sentem," (pulsação emocional)
-  document.getElementById('C').style.visibility = t<5.5 ? 'hidden':'visible';
-  document.getElementById('A').style.visibility = t>2.9 ? 'hidden':'visible';
-  rings.innerHTML='';
-  [6.78,7.12,7.46].forEach(s=>{ const p=prog(t,s,1.8); if(p<=0||p>=1)return; const e=OUT(p);
-    const c=document.createElementNS(NS,'circle'); c.setAttribute('cx',CX); c.setAttribute('cy',1088);
-    c.setAttribute('r',90+620*e); c.setAttribute('fill','none'); c.setAttribute('stroke','#A67C63');
-    c.setAttribute('stroke-width',2.4*(1-p)+.6); c.setAttribute('opacity',.85*(1-SINE(p))); rings.appendChild(c); });
+  // losango → círculo
+  const R=keys([[0,330],[31.6,330],[32.5,400]],t);
+  const P=DPT.map(([x,y])=>[CX+x*R,CY+y*R]);
+  const dOut=IN(prog(t,34.55,.4)), dIn=t>28.0&&t<35.2;
+  DG.style.display=dIn?'':'none';
+  if(dIn){
+    const linesFade=1-EASE(prog(t,31.6,.6));
+    dNodes.forEach((c,i)=>{const e=OUT(prog(t,DT[i]-.06,.5)); c.setAttribute('cx',P[i][0]); c.setAttribute('cy',P[i][1]);
+      c.setAttribute('r',11*e); c.setAttribute('opacity',e*(1-dOut));});
+    dLines.forEach((l,i)=>{ const a=P[i], b=P[(i+1)%4]; const st=i<3?DT[i+1]:30.95; const e=EASE(prog(t,st-.05,.6));
+      l.setAttribute('x1',a[0]);l.setAttribute('y1',a[1]);l.setAttribute('x2',a[0]+(b[0]-a[0])*e);l.setAttribute('y2',a[1]+(b[1]-a[1])*e);
+      l.setAttribute('opacity',(e>0?.9:0)*linesFade*(1-dOut)); });
+    dSpokes.forEach((l,i)=>{ const e=EASE(prog(t,31.1+i*.05,.5)); const a=P[i];
+      l.setAttribute('x1',a[0]);l.setAttribute('y1',a[1]);l.setAttribute('x2',a[0]+(CX-a[0])*e);l.setAttribute('y2',a[1]+(CY-a[1])*e);
+      l.setAttribute('opacity',(e>0?.5:0)*linesFade*(1-dOut)); });
+    dHub.setAttribute('r',7*OUT(prog(t,31.3,.5))*linesFade);
+    const C=2*Math.PI*R, rp=EASE(prog(t,33.8,1.0));
+    dRing.setAttribute('r',R); dRing.setAttribute('stroke-dasharray',C); dRing.setAttribute('stroke-dashoffset',C*(1-rp));
+    dRing.setAttribute('opacity',(rp>0?.95:0)*(1-dOut));
+  }
+
+  // pontos de contato → linha de valor
+  const kOut=IN(prog(t,39.66,.38)); pth.style.opacity=1-kOut; pth.style.display=(t>35.8&&t<40.2)?'':'none';
+  pDots.forEach((d,i)=>d.setAttribute('r',8*OUT(prog(t,PDT[i]-.06,.5))));
+  pLine.setAttribute('stroke-dashoffset',plen*(1-EASE(prog(t,38.84,.8))));
+  const pa=prog(t,39.2,1.1); pAccent.setAttribute('r',8+50*OUT(pa)); pAccent.setAttribute('opacity',pa>0&&pa<1?.9*(1-SINE(pa)):0);
+  pDots[5].setAttribute('fill', t>39.16?'#F2E6C2':'#D9BD9C');
+
+  // ondas (sentem · Aumar · assinatura)
+  fx.innerHTML='';
+  RIPPLES.forEach(([s,cy])=>{ const p=prog(t,s,1.8); if(p<=0||p>=1)return; const e=OUT(p);
+    el(fx,'circle',{cx:CX,cy,r:90+620*e,fill:'none',stroke:'#A67C63','stroke-width':2.4*(1-p)+.6,opacity:.85*(1-SINE(p))}); });
+
+  // fade final
+  $('fade').style.opacity=EASE(prog(t,47.3,.7));
 };
 window.render(0);
-// pré-visualização no navegador: toca em tempo real (sem efeito na renderização quadro a quadro)
-if(!navigator.webdriver){ const t0=performance.now(); (function loop(){ window.render(((performance.now()-t0)/1000)%8); requestAnimationFrame(loop);} )(); }
+// pré-visualização no navegador: toca em tempo real
+if(!navigator.webdriver){ const t0=performance.now(); (function loop(){ window.render(((performance.now()-t0)/1000)%DURATION); requestAnimationFrame(loop);} )(); }
 </script>
 </body>
 </html>
