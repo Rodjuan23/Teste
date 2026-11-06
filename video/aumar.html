@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Aumar — Tudo está conectado</title>
+<style>
+@font-face{font-family:Cormorant;font-weight:500;font-style:normal;src:url(fonts/cormorant-garamond-latin-500-normal.woff2)}
+@font-face{font-family:Cormorant;font-weight:500;font-style:italic;src:url(fonts/cormorant-garamond-latin-500-italic.woff2)}
+@font-face{font-family:Cormorant;font-weight:600;font-style:italic;src:url(fonts/cormorant-garamond-latin-600-italic.woff2)}
+@font-face{font-family:Manrope;font-weight:400;src:url(fonts/manrope-latin-400-normal.woff2)}
+@font-face{font-family:Manrope;font-weight:600;src:url(fonts/manrope-latin-600-normal.woff2)}
+:root{
+  --vinho:#732C1D;   /* 60% fundos */
+  --caramelo:#A67C63;/* 20% formas e linhas */
+  --areia:#D9BD9C;   /* 10% apoio e detalhes */
+  --creme:#F2E6C2;   /* 10% títulos e destaques */
+}
+html,body{margin:0;background:#000}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 45%, #7f3322 0%, var(--vinho) 45%, #5a2014 100%)}
+#glow{position:absolute;width:1400px;height:1400px;border-radius:50%;
+  background:radial-gradient(circle, rgba(217,189,156,.10) 0%, rgba(217,189,156,0) 60%)}
+svg{position:absolute;inset:0}
+#grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay}
+.scene{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;color:var(--creme)}
+.w{display:inline-block;will-change:transform,opacity,filter}
+.serif{font-family:Cormorant;font-weight:500;line-height:1.02;letter-spacing:-.01em}
+.it{font-family:Cormorant;font-style:italic;font-weight:600;letter-spacing:-.015em}
+.eyebrow{font-family:Manrope;font-weight:600;font-size:28px;letter-spacing:.42em;color:var(--areia);
+  display:flex;align-items:center;gap:22px;margin-bottom:56px}
+.eyebrow i{display:block;height:2px;background:var(--caramelo);width:0}
+.l1{font-size:112px}.l2{font-size:176px;line-height:1.05}
+.m{font-size:96px;margin:6px 0}.big{font-size:164px;line-height:1.1;position:relative;padding:4px 40px 20px}
+.corner{position:absolute;width:46px;height:46px;border-color:var(--areia);border-style:solid;border-width:0;opacity:0}
+.c1{left:0;top:0;border-left-width:3px;border-top-width:3px}
+.c2{right:0;top:0;border-right-width:3px;border-top-width:3px}
+.c3{left:0;bottom:0;border-left-width:3px;border-bottom-width:3px}
+.c4{right:0;bottom:0;border-right-width:3px;border-bottom-width:3px}
+#underline{height:3px;background:var(--caramelo);width:0;margin-top:26px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="glow"></div>
+  <svg id="net" viewBox="0 0 1080 1920"></svg>
+  <svg id="rings" viewBox="0 0 1080 1920"></svg>
+
+  <!-- Cena A: "Tudo está conectado." -->
+  <div class="scene" id="A">
+    <div class="serif l1"><span class="w" data-t="0.66">Tudo</span> <span class="w" data-t="0.92">está</span></div>
+    <div class="it l2"><span class="w" data-t="1.20">conectado.</span></div>
+    <div id="underline"></div>
+  </div>
+
+  <!-- Cena B: "Uma marca não é feita apenas do que comunica." -->
+  <div class="scene" id="B">
+    <div class="eyebrow" id="eb"><i></i><span>MARCA</span><i></i></div>
+    <div class="serif m"><span class="w" data-t="2.67">Uma</span> <span class="w" data-t="2.95">marca</span></div>
+    <div class="serif m"><span class="w" data-t="3.15">não</span> <span class="w" data-t="3.30">é</span> <span class="w" data-t="3.42">feita</span></div>
+    <div class="serif m"><span class="w" data-t="3.78">apenas</span> <span class="w" data-t="4.06">do</span> <span class="w" data-t="4.30">que</span></div>
+    <div class="it big" id="frame"><span class="w" data-t="4.50">comunica.</span>
+      <b class="corner c1"></b><b class="corner c2"></b><b class="corner c3"></b><b class="corner c4"></b></div>
+  </div>
+
+  <!-- Cena C: "É feita do que as pessoas sentem," -->
+  <div class="scene" id="C">
+    <div class="serif m"><span class="w" data-t="5.63">É</span> <span class="w" data-t="5.80">feita</span> <span class="w" data-t="6.05">do</span> <span class="w" data-t="6.13">que</span></div>
+    <div class="serif m"><span class="w" data-t="6.25">as</span> <span class="w" data-t="6.38">pessoas</span></div>
+    <div class="it l2" id="sentem"><span class="w" data-t="6.74">sentem,</span></div>
+  </div>
+
+  <canvas id="grain" width="540" height="960"></canvas>
+</div>
+
+<script>
+// ---------- easing (Premium: 0.4,0,0.2,1) ----------
+function bez(x1,y1,x2,y2){
+  const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+  const X=t=>((ax*t+bx)*t+cx)*t, Y=t=>((ay*t+by)*t+cy)*t, dX=t=>(3*ax*t+2*bx)*t+cx;
+  return p=>{ if(p<=0)return 0; if(p>=1)return 1; let t=p;
+    for(let i=0;i<8;i++){const d=dX(t); if(Math.abs(d)<1e-6)break; t-=(X(t)-p)/d;}
+    return Y(Math.min(1,Math.max(0,t))); };
+}
+const EASE=bez(.4,0,.2,1), OUT=bez(.05,.7,.1,1), IN=bez(.3,0,1,1), SINE=p=>.5-.5*Math.cos(Math.PI*p);
+const clamp=v=>Math.min(1,Math.max(0,v));
+const prog=(t,s,d)=>clamp((t-s)/d);
+
+// ---------- rede de conexões (caramelo + nós areia) ----------
+const NS='http://www.w3.org/2000/svg';
+const net=document.getElementById('net'), rings=document.getElementById('rings');
+const CX=540, CY=960;
+const nodes=[[180,520],[470,360],[860,470],[960,860],[900,1330],[620,1560],[250,1470],[110,1010],[540,250],[1000,1110],[330,1700],[80,760]];
+const edges=[[0,1],[1,8],[8,2],[2,3],[3,9],[9,4],[4,5],[5,10],[10,6],[6,7],[7,11],[11,0],[1,2],[6,5],[0,7],[3,4]];
+const spokes=nodes.map((_,i)=>i);
+const G=document.createElementNS(NS,'g'); net.appendChild(G);
+function line(a,b,w,op){const l=document.createElementNS(NS,'line');
+  l.setAttribute('x1',a[0]);l.setAttribute('y1',a[1]);l.setAttribute('x2',b[0]);l.setAttribute('y2',b[1]);
+  l.setAttribute('stroke','#A67C63');l.setAttribute('stroke-width',w);l.setAttribute('stroke-linecap','round');
+  const len=Math.hypot(b[0]-a[0],b[1]-a[1]);l.dataset.len=len;l.dataset.op=op;
+  l.setAttribute('stroke-dasharray',len);l.setAttribute('stroke-dashoffset',len);G.appendChild(l);return l;}
+const edgeEls=edges.map(([a,b])=>line(nodes[a],nodes[b],2,.75));
+const spokeEls=spokes.map(i=>line(nodes[i],[CX,CY],1.4,.38));
+const nodeEls=nodes.map((n,i)=>{const c=document.createElementNS(NS,'circle');
+  c.setAttribute('cx',n[0]);c.setAttribute('cy',n[1]);c.setAttribute('fill','#D9BD9C');G.appendChild(c);return c;});
+
+// ---------- grão (camada ambiente) ----------
+const gc=document.getElementById('grain').getContext('2d'); const img=gc.createImageData(540,960);
+function grain(f){ let s=(f*9301+49297)%233280||1;
+  for(let i=0;i<img.data.length;i+=4){ s=(s*16807)%2147483647; const v=s%255;
+    img.data[i]=img.data[i+1]=img.data[i+2]=v; img.data[i+3]=255; } gc.putImageData(img,0,0); }
+
+// ---------- palavras ----------
+const words=[...document.querySelectorAll('.w')].map(el=>({el,t:+el.dataset.t}));
+function wordIn(w,t){ const p=prog(t,w.t-0.06,0.6), e=OUT(p);
+  w.el.style.opacity=e; w.el.style.transform=`translateY(${(1-e)*34}px)`; w.el.style.filter=`blur(${(1-e)*10}px)`; }
+function sceneOut(id,t,start,dur=0.38){ const p=IN(prog(t,start,dur)); const el=document.getElementById(id);
+  el.style.opacity=1-p; el.style.transform=`translateY(${-46*p}px)`; el.style.filter=`blur(${6*p}px)`; }
+
+// ---------- quadro no tempo t (segundos) ----------
+window.render=function(t){
+  // ambiente: luz suave à deriva + grão
+  const g=document.getElementById('glow');
+  g.style.transform=`translate(${-160+Math.sin(t*.35)*120}px, ${260+Math.cos(t*.28)*160}px)`;
+  grain(Math.round(t*30));
+
+  // rede: nós aparecem, arestas se ligam em "conectado", depois recua para ambiente
+  const dim = 1 - .62*EASE(prog(t,2.35,.7));
+  const breathe = 1 + .012*Math.sin(t*1.1);
+  const toward = .18*EASE(prog(t,6.6,1.2));               // em "sentem" a rede se aproxima do centro
+  G.setAttribute('transform',`translate(${CX} ${CY}) rotate(${t*.9}) scale(${breathe*(1-toward)}) translate(${-CX} ${-CY})`);
+  nodeEls.forEach((c,i)=>{ const e=OUT(prog(t,.45+i*.035,.55));
+    c.setAttribute('r',(i%3?5:8)*e*(1+.15*Math.sin(t*2+i))); c.setAttribute('opacity',e*.95*Math.max(dim,.5)); });
+  edgeEls.forEach((l,i)=>{ const e=EASE(prog(t,1.18+i*.03,.9));
+    l.setAttribute('stroke-dashoffset',l.dataset.len*(1-e)); l.setAttribute('opacity',l.dataset.op*dim); });
+  spokeEls.forEach((l,i)=>{ const e=EASE(prog(t,1.45+i*.025,.8));
+    l.setAttribute('stroke-dashoffset',l.dataset.len*(1-e)); l.setAttribute('opacity',l.dataset.op*dim*(1-.6*EASE(prog(t,2.3,.5)))); });
+
+  // palavras
+  words.forEach(w=>wordIn(w,t));
+
+  // Cena A
+  document.getElementById('underline').style.width=(560*EASE(prog(t,1.75,.65)))+'px';
+  sceneOut('A',t,2.38);
+
+  // Cena B: rótulo + moldura em "comunica."
+  const eb=document.getElementById('eb'); const pe=OUT(prog(t,2.55,.6));
+  eb.style.opacity=pe; eb.querySelectorAll('i').forEach(i=>i.style.width=(70*EASE(prog(t,2.6,.6)))+'px');
+  const pf=OUT(prog(t,4.75,.6));
+  document.querySelectorAll('#frame .corner').forEach((c,i)=>{ const sx=i%2?-1:1, sy=i<2?1:-1;
+    c.style.opacity=pf; c.style.transform=`translate(${-sx*26*(1-pf)}px, ${-sy*26*(1-pf)}px)`; });
+  sceneOut('B',t,5.38);
+  document.getElementById('B').style.visibility = t<2.4||t>5.9 ? 'hidden':'visible';
+
+  // Cena C: ondas a partir de "sentem," (pulsação emocional)
+  document.getElementById('C').style.visibility = t<5.5 ? 'hidden':'visible';
+  document.getElementById('A').style.visibility = t>2.9 ? 'hidden':'visible';
+  rings.innerHTML='';
+  [6.78,7.12,7.46].forEach(s=>{ const p=prog(t,s,1.8); if(p<=0||p>=1)return; const e=OUT(p);
+    const c=document.createElementNS(NS,'circle'); c.setAttribute('cx',CX); c.setAttribute('cy',1088);
+    c.setAttribute('r',90+620*e); c.setAttribute('fill','none'); c.setAttribute('stroke','#A67C63');
+    c.setAttribute('stroke-width',2.4*(1-p)+.6); c.setAttribute('opacity',.85*(1-SINE(p))); rings.appendChild(c); });
+};
+window.render(0);
+// pré-visualização no navegador: toca em tempo real (sem efeito na renderização quadro a quadro)
+if(!navigator.webdriver){ const t0=performance.now(); (function loop(){ window.render(((performance.now()-t0)/1000)%8); requestAnimationFrame(loop);} )(); }
+</script>
+</body>
+</html>
